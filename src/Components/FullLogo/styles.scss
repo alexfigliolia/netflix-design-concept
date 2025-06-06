@@ -1,0 +1,12 @@
+@use "Styles/Variables";
+
+.full-logo {
+  width: 6.25em;
+  max-height: 100%;
+  overflow: hidden;
+  @include Variables.center;
+  &>svg {
+    width: 6.25em;
+    height: 6.25em;
+  }
+}

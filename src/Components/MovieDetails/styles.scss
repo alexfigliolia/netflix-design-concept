@@ -1,0 +1,45 @@
+@use "Styles/Variables";
+
+.movie-info .modal-view__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  &>p {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  &>.meta-data {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1em;
+    &>.content-rating {
+      position: relative;
+      padding: 1em 0.75em 0.35em;
+      &>span {
+        top: 0.75em;
+        position: absolute;
+        // display: none;
+      }
+    }
+  }
+  &>.genres {
+    display: flex;
+    gap: 0.5em;
+    &>span {
+      padding: 0.25em 0.5em;
+      border-radius: 0.5em;
+      font-weight: 600;
+      font-size: 0.8em;
+      border: 1.5px solid #dfdbdb;
+    }
+  }
+  &>.about {
+    display: flex;
+    gap: 1em;
+    flex-direction: column;
+    &>h2 {
+      margin: 0;
+    }
+  }
+}

@@ -1,0 +1,32 @@
+/* ======================= VARIABLES ==================== */
+
+
+/* ======MEDIA QUERIES====== */
+$mq-375: "(min-width: 375px)";
+$mq-410: "(min-width: 410px)";
+$mq-550: "(min-width: 550px)";
+$mq-670: "(min-width: 670px)";
+$mq-800: "(min-width: 800px)";
+$mq-890: "(min-width: 890px)";
+$mq-957: "(min-width: 957px)";
+$mq-1000: "(min-width: 1000px)";
+$mq-1070: "(min-width: 1070px)";
+$mq-1150: "(min-width: 1150px)";
+$mq-1350: "(min-width: 1350px)";
+$mq-1700: "(min-width: 1700px)";
+$mq-h-635: "(min-height: 635px)";
+$mq-h-1024: "(min-height: 1024px)";
+$mq-h-1051: "(min-height: 1051px)";
+$mq-h-1400: "(min-height: 1400px)";
+
+/* ======================= MIXINS ==================== */
+@mixin center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin noSelection {
+  -webkit-touch-callout: none;
+  user-select: none;
+}

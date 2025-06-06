@@ -1,0 +1,10 @@
+.home {
+  width: 100%;
+  min-height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  position: relative;
+  & button, input, a, [aria-roledescription="carousel"] {
+    pointer-events: auto;
+  }
+}

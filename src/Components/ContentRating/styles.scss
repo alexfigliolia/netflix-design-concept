@@ -1,0 +1,18 @@
+.content-rating {
+  color: #fff;
+  line-height: 1.25;
+  padding: 0.5em 1em;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5em;
+  backdrop-filter: blur(15px);
+  background-color: rgba(#fff, 0.25);
+  &>span {
+    font-size: 0.5em;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  &>div > strong > span {
+    opacity: 0.75;
+  }
+}

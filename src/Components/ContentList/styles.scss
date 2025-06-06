@@ -1,0 +1,58 @@
+@use "Styles/Variables";
+
+.content-list {
+  width: 100%;
+  position: relative;
+  &>h2 {
+    font-size: 1.5em;
+    margin: 0;
+    color: #fff;
+  }
+  &>.content-list__content {
+    --padding-bottom: 2em;
+    width: 100%;
+    position: relative;
+    &>.content-list__items {
+      width: 100%;
+      max-width: 100%;
+      overflow: scroll;
+      white-space: nowrap;
+      scroll-snap-type: x mandatory;
+      padding-top: calc(var(--padding-bottom) - 0.5em);
+      padding-bottom: var(--padding-bottom);
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 1em;
+      &>div {
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        opacity: 0;
+      }
+    }
+    &>.content-list__scroller {
+      padding: 0;
+      width: 2.5em;
+      height: 2.5em;
+      min-width: 2.5em;
+      border-radius: 50%;
+      border: none;
+      background-color: rgba(#000, 0.2);
+      backdrop-filter: blur(5px);
+      @include Variables.center;
+      position: absolute;
+      top: 50%;
+      translate: 0 calc(-50% - (var(--padding-bottom) / 2));
+      &>svg {
+        width: 2em;
+        height: 2em;
+        fill: #eae6e6;
+      }
+      &:first-of-type {
+        left: calc(var(--layout-padding) * -0.75);
+      }
+      &:last-of-type {
+        right: calc(var(--layout-padding) * -0.75);
+      }
+    }
+  }
+}

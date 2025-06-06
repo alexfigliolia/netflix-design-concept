@@ -1,0 +1,19 @@
+.main-navigation {
+  &>ul {
+    list-style-type: none;
+    & a {
+      color: #fff;
+      font-weight: 500;
+      text-decoration: none;
+      font-size: 1.15em;
+      transition: color 0.35s;
+      &:visited {
+        color: #fff;
+      }
+      &:hover,
+      &.active {
+        color: var(--red);
+      }
+    }
+  }
+}

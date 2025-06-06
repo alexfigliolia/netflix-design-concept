@@ -1,0 +1,47 @@
+@use "Styles/Variables";
+
+.main-header {
+  height: var(--header-height);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  @include Variables.center;
+  z-index: 1000;
+  &>div {
+    --dimension: calc(100% - var(--layout-padding));
+    width: var(--dimension);
+    height: var(--dimension);
+    background-color: rgba(#000, 0.65);
+    backdrop-filter: blur(15px);
+    @include Variables.center;
+    border-radius: calc(var(--layout-padding) / 2);
+    padding: 0.5em 1.5em;
+    max-width: 1200px;
+    @media (min-width: 670px) {
+      padding: 0.5em 2em;
+    }
+    &>div {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &>.full-logo {
+        @media(min-width: 670px) {
+          font-size: 1.15em;
+        }
+      }
+      &>.main-navigation {
+        display: none;
+        @media(min-width: 670px) {
+          display: initial;
+        }
+        &>ul {
+          @include Variables.center;
+          gap: 2em;
+        }
+      }
+    }
+  }
+}

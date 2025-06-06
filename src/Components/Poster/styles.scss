@@ -1,0 +1,19 @@
+.content-poster {
+  --height: 200px;
+  height: var(--height);
+  width: calc(var(--height) * 0.6666666);
+  @media (min-width: 670px) {
+    --height: 275px;
+  }
+  & button {
+    width: 100%;
+    height: 100%;    
+    padding: 0;
+    border: none;
+  }
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
