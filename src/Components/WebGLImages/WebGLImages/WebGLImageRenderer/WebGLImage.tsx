@@ -1,12 +1,20 @@
 "use client";
-import { use, useEffect } from "react";
+import { Fragment, use, useEffect } from "react";
 import { useController } from "@figliolia/react-hooks";
 import { useFrame } from "@react-three/fiber";
 import { GLWaveImage } from "Components/GLWaveImage";
-import { IImage, WebGLImagesContext } from "../../Context";
+import { ImageID, WebGLImagesContext } from "../../Context";
 import { Geometry } from "./Geometry";
+import { WebGLTransitionElement } from "./WebGLTransitionElement";
 
-export const WebGLImage = ({ ID, image, width, height, ...rest }: IImage) => {
+export const WebGLImage = ({
+  ID,
+  image,
+  width,
+  height,
+  activating,
+  deactivating,
+}: Props) => {
   const geometry = useController(new Geometry());
   const controller = use(WebGLImagesContext);
 
@@ -28,34 +36,35 @@ export const WebGLImage = ({ ID, image, width, height, ...rest }: IImage) => {
     });
   });
 
-  // const onClick = useCallback(() => {
-  //   withMesh(mesh => {
-  //     const xSize = props?.scale?.[0] ?? 1;
-  //     const ySize = props?.scale?.[1] ?? 1;
-  //     const halfHeight = height / 2;
-  //     gsap.to(mesh.scale, {
-  //       y: halfHeight,
-  //       x: (xSize * halfHeight) / ySize,
-  //       duration: 1,
-  //       ease: "power2.inOut",
-  //     });
-  //     gsap.to(mesh.position, {
-  //       z: 100,
-  //       x: 0,
-  //       y: 0,
-  //       duration: 1,
-  //       ease: "power2.inOut",
-  //     });
-  //   });
-  // }, [withMesh, height, props.scale]);
-
   return (
-    <GLWaveImage
-      {...rest}
-      position-z={0}
-      scale={[width, height]}
-      ref={geometry.cacheReference}
-      url={`${image.src}?bypass-cors-please`}
-    />
+    <Fragment>
+      <GLWaveImage
+        position-z={0}
+        scale={[width, height]}
+        ref={geometry.cacheReference}
+        url={`${image.src}?bypass-cors-please`}
+      />
+      {(activating || deactivating) && (
+        <WebGLTransitionElement
+          ID={ID}
+          image={image}
+          width={width}
+          height={height}
+          fadeBackIn={geometry.revealMesh}
+          activating={activating && !deactivating}
+          deactivating={deactivating}
+          {...geometry.meshPosition}
+        />
+      )}
+    </Fragment>
   );
 };
+
+export interface Props {
+  ID: ImageID;
+  image: HTMLImageElement;
+  width: number;
+  height: number;
+  activating: boolean;
+  deactivating: boolean;
+}

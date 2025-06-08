@@ -29,6 +29,7 @@ export const createImageMaterial = <T extends Record<string, UniformValue>>(
       zoom: 1,
       radius: 0,
       grayscale: 0,
+      transparent: true,
       opacity: 1,
       ...unforms,
     },

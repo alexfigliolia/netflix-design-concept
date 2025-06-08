@@ -7,6 +7,17 @@ export const useSearchParamsBuilder = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const setParam = useCallback(
+    (key: string, value: string) => {
+      const params = new URLSearchParams();
+      params.set(key, value);
+      navigate.push(Routing.buildSearchPath(pathname, params), {
+        scroll: false,
+      });
+    },
+    [navigate, pathname],
+  );
+
   const appendParam = useCallback(
     (key: string, value: string) => {
       const params = new URLSearchParams(searchParams);
@@ -30,7 +41,7 @@ export const useSearchParamsBuilder = () => {
   );
 
   return useMemo(
-    () => ({ appendParam, deleteParam }),
-    [appendParam, deleteParam],
+    () => ({ appendParam, deleteParam, setParam }),
+    [appendParam, deleteParam, setParam],
   );
 };

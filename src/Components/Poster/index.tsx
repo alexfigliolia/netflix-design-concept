@@ -5,7 +5,7 @@ import { Callback } from "Types/Generics";
 import "./styles.scss";
 
 export const Poster = forwardRef(function Poster(
-  { title, posterURL, className, onClick, ...rest }: IPoster,
+  { id: _id, title, posterURL, className, onClick, ...rest }: IPoster,
   ref: ForwardedRef<HTMLImageElement>,
 ) {
   const imagePath = useMemo(() => MovieClient.imageURL(posterURL), [posterURL]);
@@ -30,6 +30,7 @@ export const Poster = forwardRef(function Poster(
 });
 
 export interface IPoster extends Omit<HTMLProps<HTMLDivElement>, "id" | "ref"> {
+  id: number;
   title: string;
   className?: string;
   posterURL: string;

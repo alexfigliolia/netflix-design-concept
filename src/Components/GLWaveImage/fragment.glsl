@@ -11,6 +11,7 @@ uniform float opacity;
 varying float vPointerDistance;
 varying float vNoise;
 uniform float uHoverState;
+uniform float uOpacity;
 
 const vec3 luma = vec3(.299, 0.587, 0.114);
 
@@ -47,6 +48,7 @@ void main() {
 
   gl_FragColor = imageTexture;
   gl_FragColor.rgb += 0.1 * vec3(vNoise);
+  gl_FragColor.a = uOpacity;
 
   #include <tonemapping_fragment>
   #include <colorspace_fragment>

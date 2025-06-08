@@ -15,7 +15,10 @@ export const PopularTVShows = async (_: Propless) => {
   const list =
     results as Required<TvSeriesAiringTodayList200ResponseResultsInner>[];
   return (
-    <WebGLContentList title="Popular TV Shows" aria-label="Popular TV Shows">
+    <WebGLContentList
+      title="Popular TV Shows"
+      aria-label="Popular TV Shows"
+      param={Routing.TV_SHOW_DETAILS_PARAM}>
       {list.map(series => {
         return (
           <ContentPosterLink

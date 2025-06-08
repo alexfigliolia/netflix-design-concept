@@ -14,7 +14,10 @@ export const TopRatedMovies = async (_: Propless) => {
   } = await MovieClient.movieTopRatedList();
   const list = results as Required<MovieTopRatedList200ResponseResultsInner>[];
   return (
-    <WebGLContentList title="Top Rated Movies" aria-label="Top Rated Movies">
+    <WebGLContentList
+      title="Top Rated Movies"
+      aria-label="Top Rated Movies"
+      param={Routing.MOVIE_DETAILS_PARAM}>
       {list.map(movie => {
         return (
           <ContentPosterLink

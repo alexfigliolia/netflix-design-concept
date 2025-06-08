@@ -19,8 +19,10 @@ export class WebGLImagesController {
   public initialized = false;
   public desiredRoot: RootNode | string;
   private FramePooler = new FramePooler();
+  public activeImage: ImageID | null = null;
+  public deactivatingImage: ImageID | null = null;
   private debounceImageEmission = debounce(() => {
-    this.emitEvent("images", this.imageList);
+    this.emitEvent("images", this.imageState);
   }, 50);
   private imageIDs = new AutoIncrementingID();
   private imageData = new Map<string, IImage>();
@@ -63,7 +65,7 @@ export class WebGLImagesController {
   }
 
   public subscribeToImages(callback: IImageCallback) {
-    callback(this.imageList);
+    callback(this.imageState);
     return this.subscribe("images", callback);
   }
 
@@ -150,6 +152,25 @@ export class WebGLImagesController {
     ID: string,
   ) {
     return this.Emitter.off(event, ID);
+  }
+
+  public activateImage(image: ImageID | null) {
+    if (this.activeImage) {
+      this.deactivatingImage = this.activeImage;
+    }
+    if (image) {
+      this.emitEvent(image, {
+        type: "activation",
+        position: { x: 0, y: 0 },
+      });
+    }
+    this.activeImage = image;
+    this.debounceImageEmission();
+  }
+
+  public resetDeactivatedImage() {
+    this.deactivatingImage = null;
+    this.debounceImageEmission();
   }
 
   private registerScrollView(scrollView: HTMLElement) {
@@ -293,7 +314,11 @@ export class WebGLImagesController {
     return false;
   }
 
-  private get imageList() {
-    return Array.from(this.imageData.values());
+  private get imageState() {
+    return {
+      activeImage: this.activeImage,
+      deactivatingImage: this.deactivatingImage,
+      images: Array.from(this.imageData.values()),
+    };
   }
 }

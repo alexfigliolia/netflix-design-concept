@@ -8,11 +8,11 @@ export const ContentPosterLink = ({
   Component = Poster,
   ...props
 }: Props) => {
-  const { appendParam } = useSearchParamsBuilder();
+  const { setParam } = useSearchParamsBuilder();
 
   const onClick = useCallback(() => {
-    appendParam(queryParam, String(props.id));
-  }, [appendParam, queryParam, props.id]);
+    setParam(queryParam, String(props.id));
+  }, [setParam, queryParam, props.id]);
 
   return <Component {...props} onClick={onClick} />;
 };

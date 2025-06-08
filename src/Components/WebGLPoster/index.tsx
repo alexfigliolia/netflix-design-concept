@@ -7,19 +7,26 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import { IPoster, Poster } from "Components/Poster";
 import {
+  ImageID,
   PointerType,
   WebGLContentListContext,
   WebGLImagesContext,
 } from "Components/WebGLImages";
+import { useActivationListener } from "./useParamListener";
 
-export const WebGLPoster = (props: IPoster) => {
-  const ID = useRef<`${number}`>("-1");
+export const WebGLPoster = ({ onClick, ...props }: IPoster) => {
   const controller = use(WebGLImagesContext);
   const node = useRef<HTMLImageElement>(null);
-  const scrollViewParents = use(WebGLContentListContext);
+  const { scrollViews: scrollViewParents, queryParam } = use(
+    WebGLContentListContext,
+  );
+  const [imageID, setImageID] = useState<ImageID | null>(null);
+
+  useActivationListener(imageID, props.id, queryParam);
 
   useEffect(() => {
     if (!node.current) {
@@ -31,9 +38,10 @@ export const WebGLPoster = (props: IPoster) => {
         scrollViews.push(current);
       }
     }
-    ID.current = controller.registerImage(node.current, scrollViews);
+    const ID = controller.registerImage(node.current, scrollViews);
+    setImageID(ID);
     return () => {
-      controller.unmountImage(ID.current, scrollViews);
+      controller.unmountImage(ID, scrollViews);
     };
   }, [controller, scrollViewParents]);
 
@@ -61,14 +69,14 @@ export const WebGLPoster = (props: IPoster) => {
   const pointerEmitter = useCallback(
     (type: PointerType) => (e: PointerEvent) => {
       const position = getPointerPosition(e);
-      if (position) {
-        controller.emitEvent(ID.current, {
+      if (position && imageID) {
+        controller.emitEvent(imageID, {
           type,
           position,
         });
       }
     },
-    [getPointerPosition, controller],
+    [getPointerPosition, controller, imageID],
   );
 
   const onPointerEnter = useMemo(
@@ -88,6 +96,7 @@ export const WebGLPoster = (props: IPoster) => {
     <Poster
       ref={node}
       {...props}
+      onClick={onClick}
       onMouseEnter={onPointerEnter}
       onTouchStart={onPointerEnter}
       onMouseMove={onPointerMove}
@@ -98,4 +107,4 @@ export const WebGLPoster = (props: IPoster) => {
   );
 };
 
-type PointerEvent = MouseEvent<HTMLDivElement> | TouchEvent<HTMLDivElement>;
+type PointerEvent = MouseEvent<HTMLElement> | TouchEvent<HTMLDivElement>;

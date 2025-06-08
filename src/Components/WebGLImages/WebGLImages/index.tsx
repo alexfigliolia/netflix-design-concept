@@ -12,7 +12,11 @@ export const WebGLImages = ({ children }: OptionalChildren) => {
     <WebGLImagesContextProvider>
       {children}
       <div className="webgl-images" aria-hidden>
-        <Canvas linear flat gl={{ antialias: true, alpha: true }}>
+        <Canvas
+          flat
+          linear
+          style={{ pointerEvents: "none" }}
+          gl={{ antialias: true, alpha: true }}>
           <Suspense>
             <Camera />
             <WebGLImageRenderer />

@@ -36,8 +36,6 @@ export const MovieDetails = (_: Propless) => {
       .finally(() => setState("loading", false));
   }, [selectedMovie, setState]);
 
-  console.log(info);
-
   return (
     <Modal className="movie-info" open={!!selectedMovie}>
       <p>{info?.overview}</p>

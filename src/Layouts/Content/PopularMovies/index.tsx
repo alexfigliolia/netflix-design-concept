@@ -14,7 +14,10 @@ export const PopularMovies = async (_: Propless) => {
   } = await MovieClient.moviePopularList();
   const list = results as Required<MoviePopularList200ResponseResultsInner>[];
   return (
-    <WebGLContentList title="Popular Movies" aria-label="Popular Movies">
+    <WebGLContentList
+      title="Popular Movies"
+      aria-label="Popular Movies"
+      param={Routing.MOVIE_DETAILS_PARAM}>
       {list.map(movie => {
         return (
           <ContentPosterLink

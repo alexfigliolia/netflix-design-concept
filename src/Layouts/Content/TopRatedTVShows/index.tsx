@@ -17,7 +17,8 @@ export const TopRatedTVShows = async (_: Propless) => {
   return (
     <WebGLContentList
       title="Top Rated TV Shows"
-      aria-label="Top Rated TV Shows">
+      aria-label="Top Rated TV Shows"
+      param={Routing.TV_SHOW_DETAILS_PARAM}>
       {list.map(series => {
         return (
           <ContentPosterLink

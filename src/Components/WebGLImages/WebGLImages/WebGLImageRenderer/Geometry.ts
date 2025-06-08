@@ -1,5 +1,6 @@
 import gsap from "gsap";
-import { Mesh, Vector2 } from "three";
+import { Vector2 } from "three";
+import { degToRad } from "three/src/math/MathUtils.js";
 import {
   DEFAULT_MOUSE_COORDINATES,
   IWaveShaderMaterial,
@@ -15,6 +16,22 @@ export class Geometry {
     this.mesh = mesh;
   };
 
+  public revealMesh = () => {
+    this.withMaterial(material => {
+      gsap.to(material.uniforms.uOpacity, {
+        duration: 0.1,
+        value: 1,
+      });
+    });
+  };
+
+  public get meshPosition() {
+    if (this.mesh) {
+      const { x, y } = this.mesh.position;
+      return { "position-x": x, "position-y": y };
+    }
+  }
+
   public onPointer = ({ type, position }: IPointerEvent) => {
     switch (type) {
       case "pointer-enter":
@@ -23,16 +40,18 @@ export class Geometry {
         return this.onPointerMove(position);
       case "pointer-leave":
         return this.onPointerLeave();
+      case "activation":
+        return this.fadeMesh();
       default:
         return;
     }
   };
 
-  private withMesh(fn: Callback<[WaveImageMesh]>) {
+  public withMesh<F extends Callback<[WaveImageMesh], any>>(fn: F) {
     if (!this.mesh) {
       return;
     }
-    fn(this.mesh);
+    return fn(this.mesh);
   }
 
   public withMaterial(fn: Callback<[IWaveShaderMaterial]>) {
@@ -80,6 +99,104 @@ export class Geometry {
     });
   }
 
+  public activate(positionX = 0) {
+    this.withMesh(mesh => {
+      const { x, y } = mesh.scale;
+      const xSize = Math.min(window.innerWidth, 400);
+      const ySize = (y * xSize) / x;
+      gsap
+        .timeline()
+        .to(mesh.scale, {
+          y: ySize,
+          x: xSize,
+          duration: 1,
+          ease: "power2.inOut",
+        })
+        .to(
+          mesh.position,
+          {
+            x: 0,
+            y: 0,
+            z: 200,
+            duration: 1,
+            ease: "power2.inOut",
+          },
+          0,
+        )
+        .to(
+          mesh.rotation,
+          {
+            y: this.rotateBy(positionX, true),
+            duration: 0.5,
+          },
+          0,
+        )
+        .to(
+          mesh.rotation,
+          {
+            y: 0,
+            duration: 0.25,
+          },
+          0.5,
+        );
+    });
+  }
+
+  public deactivate({
+    width,
+    height,
+    positionX = 0,
+    positionY = 0,
+    onTransitionComplete,
+  }: IOriginalPosition) {
+    this.withMesh(mesh => {
+      gsap
+        .timeline({
+          // @ts-ignore
+          onComplete: onTransitionComplete,
+        })
+        .to(mesh.scale, {
+          x: width,
+          y: height,
+          duration: 1,
+          ease: "power2.inOut",
+        })
+        .to(
+          mesh.position,
+          {
+            x: positionX,
+            y: positionY,
+            z: 1,
+            duration: 1,
+            ease: "power2.inOut",
+          },
+          0,
+        )
+        .to(
+          mesh.rotation,
+          {
+            y: this.rotateBy(positionX, true),
+            duration: 0.5,
+          },
+          0,
+        )
+        .to(
+          mesh.rotation,
+          {
+            y: 0,
+            duration: 0.25,
+          },
+          0.5,
+        );
+    });
+  }
+
+  private rotateBy(positionX: number, forward: boolean) {
+    return degToRad(
+      (50 * positionX) / (window.innerWidth / (2 * (forward ? -1 : 1))),
+    );
+  }
+
   private pointerEventFromCenter(position: Point) {
     return {
       x: this.pointerFromCenter(position.x),
@@ -107,11 +224,28 @@ export class Geometry {
     });
   }
 
-  private rotateMesh(mesh: Mesh, x: number, y: number) {
+  private rotateMesh(mesh: WaveImageMesh, x: number, y: number) {
     gsap.to(mesh.rotation, {
       duration: 0.5,
       y: x,
       x: y,
     });
   }
+
+  private fadeMesh() {
+    this.withMaterial(material => {
+      gsap.to(material.uniforms.uOpacity, {
+        duration: 0.25,
+        value: 0,
+      });
+    });
+  }
+}
+
+export interface IOriginalPosition {
+  width: number;
+  height: number;
+  positionX?: number;
+  positionY?: number;
+  onTransitionComplete: Callback;
 }

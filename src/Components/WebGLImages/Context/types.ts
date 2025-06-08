@@ -15,10 +15,16 @@ export interface IScrollView {
 
 export type RootNode = Window | HTMLElement;
 
-export type IImageCallback = Callback<[IImage[]]>;
+export interface IImageState {
+  images: IImage[];
+  activeImage: ImageID | null;
+  deactivatingImage: ImageID | null;
+}
+
+export type IImageCallback = Callback<[IImageState]>;
 
 export type WebGLImageStream = {
-  images: IImage[];
+  images: IImageState;
   [key: ImageID]: IPointerEvent;
 };
 
@@ -27,6 +33,10 @@ export interface IPointerEvent {
   position: { x: number; y: number };
 }
 
-export type PointerType = "pointer-enter" | "pointer-move" | "pointer-leave";
+export type PointerType =
+  | "pointer-enter"
+  | "pointer-move"
+  | "pointer-leave"
+  | "activation";
 
 export type ImageID = `${number}`;
