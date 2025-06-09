@@ -1,0 +1,44 @@
+@use "Styles/Variables";
+
+.modal-view.content-bottom-sheet {
+  align-items: flex-end;
+  transition: opacity 0.5s 1s, visibility 0s 1.5s;
+  &>div {
+    max-width: 501px;
+    translate: 0 100%;
+    transition: translate 1s 0s cubic-bezier(0.25, 1, 0.5, 1);
+    border-top-right-radius: 0.75em;
+    border-top-left-radius: 0.75em;
+    @media (min-width: 501px) {
+      translate: 0 0;
+      border-radius: 0;
+      margin-top: 0;
+      max-height: 80%;
+    }
+  }
+  & .modal-view__content > .notch {
+    display: block;
+    position: absolute;
+    top: 0.75em;
+    left: 50%;
+    translate: -50% -3em;
+    width: 15%;
+    height: 4px;
+    border-radius: 2px;
+    background-color: #ffffffbc;
+    @media (min-width: 501px) {
+      display: none;
+    }
+  }
+  &.open {
+    transition: opacity 0.25s 0s, visibility 0s 0s;
+    &>div {
+      translate: 0 0%;
+      transition: translate 0.85s 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    & .modal-view__content > .notch {
+      translate: -50% 0;
+      transition: translate 1s 1.9s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+  }
+}

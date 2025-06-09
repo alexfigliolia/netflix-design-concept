@@ -3,11 +3,11 @@ import { Fragment, use, useEffect } from "react";
 import { useController } from "@figliolia/react-hooks";
 import { useFrame } from "@react-three/fiber";
 import { GLWaveImage } from "Components/GLWaveImage";
-import { ImageID, WebGLImagesContext } from "../../Context";
-import { Geometry } from "./Geometry";
+import { ImageID, WebGLImagesContext } from "Components/WebGLImages/Context";
+import { GeometryController } from "./Geometry";
 import { WebGLTransitionElement } from "./WebGLTransitionElement";
 
-export const WebGLImage = ({
+export const WebGLImageMesh = ({
   ID,
   image,
   width,
@@ -15,8 +15,8 @@ export const WebGLImage = ({
   activating,
   deactivating,
 }: Props) => {
-  const geometry = useController(new Geometry());
   const controller = use(WebGLImagesContext);
+  const geometry = useController(new GeometryController());
 
   useEffect(() => {
     if (!geometry.mesh) {

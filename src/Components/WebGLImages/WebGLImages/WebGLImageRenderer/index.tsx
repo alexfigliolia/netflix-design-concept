@@ -2,7 +2,7 @@
 import { Fragment, use, useEffect, useState } from "react";
 import { Propless } from "Types/React";
 import { IImageState, WebGLImagesContext } from "../../Context";
-import { WebGLImage } from "./WebGLImage";
+import { WebGLImageMesh } from "./WebGLImageMesh";
 
 export const WebGLImageRenderer = (_: Propless) => {
   const controller = use(WebGLImagesContext);
@@ -22,7 +22,7 @@ export const WebGLImageRenderer = (_: Propless) => {
   return (
     <Fragment>
       {state.images.map(({ width, height, ID, image }) => (
-        <WebGLImage
+        <WebGLImageMesh
           ID={ID}
           key={ID}
           image={image}

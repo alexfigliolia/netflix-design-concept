@@ -1,21 +1,18 @@
 import gsap from "gsap";
 import { Vector2 } from "three";
-import { degToRad } from "three/src/math/MathUtils.js";
 import {
   DEFAULT_MOUSE_COORDINATES,
   IWaveShaderMaterial,
   WaveImageMesh,
 } from "Components/GLWaveImage";
-import { IPointerEvent } from "Components/WebGLImages";
-import { Callback, Point } from "Types/Generics";
+import { IPointerEvent } from "Components/WebGLImages/Context";
+import { Geometry } from "Tools/Geometry";
+import { Point } from "Types/Generics";
 
-export class Geometry {
-  public mesh: WaveImageMesh | null = null;
-
-  public cacheReference = (mesh: WaveImageMesh) => {
-    this.mesh = mesh;
-  };
-
+export class GeometryController extends Geometry<
+  WaveImageMesh,
+  IWaveShaderMaterial
+> {
   public revealMesh = () => {
     this.withMaterial(material => {
       gsap.to(material.uniforms.uOpacity, {
@@ -46,19 +43,6 @@ export class Geometry {
         return;
     }
   };
-
-  public withMesh<F extends Callback<[WaveImageMesh], any>>(fn: F) {
-    if (!this.mesh) {
-      return;
-    }
-    return fn(this.mesh);
-  }
-
-  public withMaterial(fn: Callback<[IWaveShaderMaterial]>) {
-    this.withMesh(mesh => {
-      fn(mesh.material);
-    });
-  }
 
   private onPointerEnter({ x, y }: Point) {
     this.withMaterial(material => {
@@ -99,104 +83,6 @@ export class Geometry {
     });
   }
 
-  public activate(positionX = 0) {
-    this.withMesh(mesh => {
-      const { x, y } = mesh.scale;
-      const xSize = Math.min(window.innerWidth, 400);
-      const ySize = (y * xSize) / x;
-      gsap
-        .timeline()
-        .to(mesh.scale, {
-          y: ySize,
-          x: xSize,
-          duration: 1,
-          ease: "power2.inOut",
-        })
-        .to(
-          mesh.position,
-          {
-            x: 0,
-            y: 0,
-            z: 200,
-            duration: 1,
-            ease: "power2.inOut",
-          },
-          0,
-        )
-        .to(
-          mesh.rotation,
-          {
-            y: this.rotateBy(positionX, true),
-            duration: 0.5,
-          },
-          0,
-        )
-        .to(
-          mesh.rotation,
-          {
-            y: 0,
-            duration: 0.25,
-          },
-          0.5,
-        );
-    });
-  }
-
-  public deactivate({
-    width,
-    height,
-    positionX = 0,
-    positionY = 0,
-    onTransitionComplete,
-  }: IOriginalPosition) {
-    this.withMesh(mesh => {
-      gsap
-        .timeline({
-          // @ts-ignore
-          onComplete: onTransitionComplete,
-        })
-        .to(mesh.scale, {
-          x: width,
-          y: height,
-          duration: 1,
-          ease: "power2.inOut",
-        })
-        .to(
-          mesh.position,
-          {
-            x: positionX,
-            y: positionY,
-            z: 1,
-            duration: 1,
-            ease: "power2.inOut",
-          },
-          0,
-        )
-        .to(
-          mesh.rotation,
-          {
-            y: this.rotateBy(positionX, true),
-            duration: 0.5,
-          },
-          0,
-        )
-        .to(
-          mesh.rotation,
-          {
-            y: 0,
-            duration: 0.25,
-          },
-          0.5,
-        );
-    });
-  }
-
-  private rotateBy(positionX: number, forward: boolean) {
-    return degToRad(
-      (50 * positionX) / (window.innerWidth / (2 * (forward ? -1 : 1))),
-    );
-  }
-
   private pointerEventFromCenter(position: Point) {
     return {
       x: this.pointerFromCenter(position.x),
@@ -235,17 +121,10 @@ export class Geometry {
   private fadeMesh() {
     this.withMaterial(material => {
       gsap.to(material.uniforms.uOpacity, {
-        duration: 0.25,
+        duration: 0.2,
+        delay: 0.1,
         value: 0,
       });
     });
   }
-}
-
-export interface IOriginalPosition {
-  width: number;
-  height: number;
-  positionX?: number;
-  positionY?: number;
-  onTransitionComplete: Callback;
 }

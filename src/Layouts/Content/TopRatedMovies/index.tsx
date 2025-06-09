@@ -2,7 +2,7 @@ import { MovieTopRatedList200ResponseResultsInner } from "API/models";
 import { ContentPosterLink } from "Components/ContentPosterLink";
 import { WebGLContentList } from "Components/WebGLImages";
 import { WebGLPoster } from "Components/WebGLPoster";
-import { MovieClient } from "Tools/MovieClient";
+import { ContentClient } from "Tools/ContentClient";
 import { Routing } from "Tools/Routing";
 import { Propless } from "Types/React";
 
@@ -11,7 +11,7 @@ export const TopRatedMovies = async (_: Propless) => {
     page = 0,
     results = [],
     totalPages = 0,
-  } = await MovieClient.movieTopRatedList();
+  } = await ContentClient.movieTopRatedList();
   const list = results as Required<MovieTopRatedList200ResponseResultsInner>[];
   return (
     <WebGLContentList

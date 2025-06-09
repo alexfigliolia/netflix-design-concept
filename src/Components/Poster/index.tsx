@@ -1,6 +1,6 @@
 import { ForwardedRef, forwardRef, HTMLProps, useMemo } from "react";
 import { classnames } from "@figliolia/classnames";
-import { MovieClient } from "Tools/MovieClient";
+import { ContentClient } from "Tools/ContentClient";
 import { Callback } from "Types/Generics";
 import "./styles.scss";
 
@@ -8,7 +8,10 @@ export const Poster = forwardRef(function Poster(
   { id: _id, title, posterURL, className, onClick, ...rest }: IPoster,
   ref: ForwardedRef<HTMLImageElement>,
 ) {
-  const imagePath = useMemo(() => MovieClient.imageURL(posterURL), [posterURL]);
+  const imagePath = useMemo(
+    () => ContentClient.imageURL(posterURL),
+    [posterURL],
+  );
   const imageNode = useMemo(
     () => <img ref={ref} src={imagePath} alt={title} />,
     [imagePath, title, ref],

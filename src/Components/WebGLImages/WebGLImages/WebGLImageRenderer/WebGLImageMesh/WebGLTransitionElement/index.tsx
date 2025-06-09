@@ -5,8 +5,8 @@ import { useFrame } from "@react-three/fiber";
 import { GLWaveImage } from "Components/GLWaveImage";
 import { WebGLImagesContext } from "Components/WebGLImages/Context";
 import { Callback } from "Types/Generics";
-import { Geometry } from "./Geometry";
-import { type Props as GLImageProps } from "./WebGLImage";
+import type { Props as WebGLImageProps } from "../index";
+import { GeometryController } from "./Geometry";
 
 export const WebGLTransitionElement = ({
   ID: _ID,
@@ -21,7 +21,7 @@ export const WebGLTransitionElement = ({
   ...rest
 }: Props) => {
   const controller = use(WebGLImagesContext);
-  const geometry = useController(new Geometry());
+  const geometry = useController(new GeometryController());
 
   useFrame((_, delta) => {
     geometry.withMaterial(material => {
@@ -69,7 +69,7 @@ export const WebGLTransitionElement = ({
   );
 };
 
-interface Props extends Omit<GLImageProps, "active"> {
+interface Props extends Omit<WebGLImageProps, "active"> {
   "position-x"?: number;
   "position-y"?: number;
   activating: boolean;

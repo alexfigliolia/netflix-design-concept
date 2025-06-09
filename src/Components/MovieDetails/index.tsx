@@ -3,17 +3,15 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useLoadingState } from "@figliolia/react-hooks";
 import { MovieDetails200Response } from "API/models";
+import { ContentBottomSheet } from "Components/ContentBottomSheet";
 import { ContentRating } from "Components/ContentRating";
-import { Modal } from "Components/Modal";
-import { useWindowHeight } from "Hooks/useWindowHeight";
 import { Content } from "Tools/Content";
-import { MovieClient } from "Tools/MovieClient";
+import { ContentClient } from "Tools/ContentClient";
 import { Routing } from "Tools/Routing";
 import { Propless } from "Types/React";
 import "./styles.scss";
 
 export const MovieDetails = (_: Propless) => {
-  const height = useWindowHeight();
   const searchParams = useSearchParams();
   const selectedMovie = useMemo(
     () => searchParams.get(Routing.MOVIE_DETAILS_PARAM),
@@ -27,7 +25,7 @@ export const MovieDetails = (_: Propless) => {
     if (!selectedMovie) {
       return;
     }
-    void MovieClient.movieDetails({ movieId: Number(selectedMovie) })
+    void ContentClient.movieDetails({ movieId: Number(selectedMovie) })
       .then(setInfo)
       .catch(() => {
         setInfo(undefined);
@@ -37,7 +35,7 @@ export const MovieDetails = (_: Propless) => {
   }, [selectedMovie, setState]);
 
   return (
-    <Modal className="movie-info" open={!!selectedMovie}>
+    <ContentBottomSheet className="movie-details" open={!!selectedMovie}>
       <p>{info?.overview}</p>
       <div className="meta-data">
         <span>Released {info?.releaseDate?.slice?.(0, 4)}</span>
@@ -62,6 +60,6 @@ export const MovieDetails = (_: Propless) => {
             "Unknown"}
         </div>
       </div>
-    </Modal>
+    </ContentBottomSheet>
   );
 };

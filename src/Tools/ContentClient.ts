@@ -7,7 +7,7 @@ class API extends DefaultApi {
   }
 }
 
-export const MovieClient = new API(
+export const ContentClient = new API(
   new Configuration({
     apiKey: `Bearer ${process.env.NEXT_PUBLIC_MOVIE_API_KEY}`,
   }),

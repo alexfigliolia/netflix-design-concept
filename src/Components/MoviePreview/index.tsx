@@ -6,7 +6,7 @@ import { MuteIcon } from "Icons/Mute";
 import { PauseIcon } from "Icons/Pause";
 import { PlayIcon } from "Icons/Play";
 import { SoundIcon } from "Icons/SoundIcon";
-import { MovieClient } from "Tools/MovieClient";
+import { ContentClient } from "Tools/ContentClient";
 import { Controller } from "./Controller";
 import "./styles.scss";
 
@@ -31,7 +31,7 @@ export const MoviewPreview = ({
   );
 
   useEffect(() => {
-    void MovieClient.movieVideos({
+    void ContentClient.movieVideos({
       movieId: id,
     }).then(({ results }) => {
       setVideoKey(
