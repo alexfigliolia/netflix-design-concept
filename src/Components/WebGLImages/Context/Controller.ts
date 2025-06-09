@@ -173,6 +173,10 @@ export class WebGLImagesController {
     this.debounceImageEmission();
   }
 
+  public getImageData(image: ImageID) {
+    return this.imageData.get(image);
+  }
+
   private registerScrollView(scrollView: HTMLElement) {
     this.scrollViews.set(scrollView, {
       scrollY: scrollView.scrollTop,
@@ -205,10 +209,13 @@ export class WebGLImagesController {
               if (!data) {
                 continue;
               }
-              this.imageData.set(ID, {
-                ...data,
-                ...(image.getBoundingClientRect().toJSON() as DOMRect),
-              });
+              this.imageData.set(
+                ID,
+                this.mutateImageData(
+                  data,
+                  image.getBoundingClientRect().toJSON() as DOMRect,
+                ),
+              );
               this.repositionImage(ID);
             }
           });
@@ -248,10 +255,13 @@ export class WebGLImagesController {
   private onWindowResize = () => {
     this.FramePooler.run(() => {
       for (const [ID, data] of this.imageData) {
-        this.imageData.set(ID, {
-          ...data,
-          ...(data.image.getBoundingClientRect().toJSON() as DOMRect),
-        });
+        this.imageData.set(
+          ID,
+          this.mutateImageData(
+            data,
+            data.image.getBoundingClientRect().toJSON() as DOMRect,
+          ),
+        );
         this.FramePooler.run(() => {
           this.resizeImage(ID);
           this.repositionImage(ID);
@@ -320,5 +330,16 @@ export class WebGLImagesController {
       deactivatingImage: this.deactivatingImage,
       images: Array.from(this.imageData.values()),
     };
+  }
+
+  private mutateImageData(data: IImage, update: Partial<IImage>) {
+    for (const key in update) {
+      const K = key as keyof IImage;
+      if (update[K] !== undefined) {
+        // @ts-ignore
+        data[K] = update[K];
+      }
+    }
+    return data;
   }
 }

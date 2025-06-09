@@ -1,27 +1,24 @@
 "use client";
-import { use, useEffect } from "react";
+import { use, useEffect, useRef } from "react";
 import { useController } from "@figliolia/react-hooks";
 import { useFrame } from "@react-three/fiber";
 import { GLWaveImage } from "Components/GLWaveImage";
 import { WebGLImagesContext } from "Components/WebGLImages/Context";
-import { Callback } from "Types/Generics";
 import type { Props as WebGLImageProps } from "../index";
 import { GeometryController } from "./Geometry";
 
 export const WebGLTransitionElement = ({
-  ID: _ID,
+  ID,
   image,
   width,
   height,
-  fadeBackIn,
   activating,
   deactivating,
-  "position-x": positionX,
-  "position-y": positionY,
   ...rest
 }: Props) => {
   const controller = use(WebGLImagesContext);
   const geometry = useController(new GeometryController());
+  const cachedImage = useRef(controller.getImageData(ID));
 
   useFrame((_, delta) => {
     geometry.withMaterial(material => {
@@ -30,49 +27,40 @@ export const WebGLTransitionElement = ({
   });
 
   useEffect(() => {
+    const { x, y } = cachedImage.current?.mesh?.position ?? { x: 0, y: 0 };
     if (activating) {
-      geometry.activate(positionX);
+      geometry.activate(x, width);
     } else if (deactivating) {
       geometry.deactivate({
         width,
         height,
-        positionX,
-        positionY,
+        positionX: x,
+        positionY: y,
         onTransitionComplete: () => {
-          fadeBackIn();
           controller.resetDeactivatedImage();
+          controller.emitEvent(ID, {
+            type: "deactivation",
+            position: { x: 0, y: 0 },
+          });
         },
       });
     }
-  }, [
-    fadeBackIn,
-    activating,
-    deactivating,
-    geometry,
-    positionX,
-    positionY,
-    width,
-    height,
-    controller,
-  ]);
+  }, [ID, activating, deactivating, geometry, width, height, controller]);
 
   return (
     <GLWaveImage
       {...rest}
       position-z={1}
-      position-x={positionX}
-      position-y={positionY}
       scale={[width, height]}
       ref={geometry.cacheReference}
       url={`${image.src}?bypass-cors-please`}
+      position-x={cachedImage.current?.mesh?.position.x}
+      position-y={cachedImage.current?.mesh?.position.y}
     />
   );
 };
 
 interface Props extends Omit<WebGLImageProps, "active"> {
-  "position-x"?: number;
-  "position-y"?: number;
   activating: boolean;
   deactivating: boolean;
-  fadeBackIn: Callback;
 }

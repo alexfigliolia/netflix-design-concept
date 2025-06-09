@@ -8,7 +8,7 @@ export class GeometryController extends Geometry<
   WaveImageMesh,
   IWaveShaderMaterial
 > {
-  public activate(positionX = 0) {
+  public activate(positionX = 0, width = 0) {
     this.withMesh(mesh => {
       const { x, y } = mesh.scale;
       const xSize = Math.min(window.innerWidth, 400);
@@ -24,7 +24,7 @@ export class GeometryController extends Geometry<
         .to(
           mesh.position,
           {
-            x: 0,
+            x: window.innerWidth >= 670 ? -width + -16 : 0,
             y: 0,
             z: 200,
             duration: 1,

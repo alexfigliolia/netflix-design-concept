@@ -13,15 +13,6 @@ export class GeometryController extends Geometry<
   WaveImageMesh,
   IWaveShaderMaterial
 > {
-  public revealMesh = () => {
-    this.withMaterial(material => {
-      gsap.to(material.uniforms.uOpacity, {
-        duration: 0.1,
-        value: 1,
-      });
-    });
-  };
-
   public get meshPosition() {
     if (this.mesh) {
       const { x, y } = this.mesh.position;
@@ -39,6 +30,8 @@ export class GeometryController extends Geometry<
         return this.onPointerLeave();
       case "activation":
         return this.fadeMesh();
+      case "deactivation":
+        return this.revealMesh();
       default:
         return;
     }
@@ -124,6 +117,15 @@ export class GeometryController extends Geometry<
         duration: 0.2,
         delay: 0.1,
         value: 0,
+      });
+    });
+  }
+
+  private revealMesh() {
+    this.withMaterial(material => {
+      gsap.to(material.uniforms.uOpacity, {
+        duration: 0.1,
+        value: 1,
       });
     });
   }

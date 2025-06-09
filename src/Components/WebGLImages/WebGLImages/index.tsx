@@ -5,6 +5,7 @@ import { OptionalChildren } from "Types/React";
 import { WebGLImagesContextProvider } from "../Context";
 import { Camera } from "./Camera";
 import { WebGLImageRenderer } from "./WebGLImageRenderer";
+import { WebGLTransitionRenderer } from "./WebGLTransitionRenderer";
 import "./styles.scss";
 
 export const WebGLImages = ({ children }: OptionalChildren) => {
@@ -20,6 +21,18 @@ export const WebGLImages = ({ children }: OptionalChildren) => {
           <Suspense>
             <Camera />
             <WebGLImageRenderer />
+          </Suspense>
+        </Canvas>
+      </div>
+      <div className="webgl-transition-element">
+        <Canvas
+          flat
+          linear
+          style={{ pointerEvents: "none" }}
+          gl={{ antialias: true, alpha: true }}>
+          <Suspense>
+            <Camera />
+            <WebGLTransitionRenderer />
           </Suspense>
         </Canvas>
       </div>

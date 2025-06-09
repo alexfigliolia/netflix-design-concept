@@ -1,19 +1,15 @@
 "use client";
 import { Fragment, use, useEffect, useState } from "react";
 import { Propless } from "Types/React";
-import { IImageState, WebGLImagesContext } from "../../Context";
+import { IImage, WebGLImagesContext } from "../../Context";
 import { WebGLImageMesh } from "./WebGLImageMesh";
 
 export const WebGLImageRenderer = (_: Propless) => {
   const controller = use(WebGLImagesContext);
-  const [state, setState] = useState<IImageState>({
-    images: [],
-    activeImage: null,
-    deactivatingImage: null,
-  });
+  const [state, setState] = useState<IImage[]>([]);
 
   useEffect(() => {
-    const ID = controller.subscribeToImages(setState);
+    const ID = controller.subscribeToImages(({ images }) => setState(images));
     return () => {
       controller.unsubscribeFromImages(ID);
     };
@@ -21,15 +17,13 @@ export const WebGLImageRenderer = (_: Propless) => {
 
   return (
     <Fragment>
-      {state.images.map(({ width, height, ID, image }) => (
+      {state.map(({ width, height, ID, image }) => (
         <WebGLImageMesh
           ID={ID}
           key={ID}
           image={image}
           width={width}
           height={height}
-          activating={ID === state.activeImage}
-          deactivating={ID === state.deactivatingImage}
         />
       ))}
     </Fragment>

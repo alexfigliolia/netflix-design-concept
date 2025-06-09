@@ -37,6 +37,7 @@ export type PointerType =
   | "pointer-enter"
   | "pointer-move"
   | "pointer-leave"
-  | "activation";
+  | "activation"
+  | "deactivation";
 
 export type ImageID = `${number}`;

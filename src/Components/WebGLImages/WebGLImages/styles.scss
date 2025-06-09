@@ -1,9 +1,17 @@
-.webgl-images {
+.webgl-images,
+.webgl-transition-element {
   width: 100%;
   height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
   pointer-events: none;
+}
+
+.webgl-images {
+  z-index: 1;
+}
+
+.webgl-transition-element {
+  z-index: 11;
 }

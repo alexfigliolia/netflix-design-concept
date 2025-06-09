@@ -3,6 +3,9 @@
 .modal-view.content-bottom-sheet {
   align-items: flex-end;
   transition: opacity 0.5s 1s, visibility 0s 1.5s;
+  @media (min-width: 670px) {
+    transition: opacity 0.5s 0s, visibility 0s 0.5s;
+  }
   &>div {
     max-width: 501px;
     translate: 0 100%;
@@ -14,6 +17,10 @@
       border-radius: 0;
       margin-top: 0;
       max-height: 80%;
+    }
+    @media (min-width: 670px) {
+      opacity: 0;
+      transition: opacity 0.5s 0s;
     }
   }
   & .modal-view__content > .notch {
@@ -35,6 +42,10 @@
     &>div {
       translate: 0 0%;
       transition: translate 0.85s 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+      @media (min-width: 670px) {
+        opacity: 1;
+        transition: opacity 0.5s 1s;
+      }
     }
     & .modal-view__content > .notch {
       translate: -50% 0;
