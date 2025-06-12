@@ -1,0 +1,23 @@
+@use "Styles/Variables";
+
+.content-bottom-sheet.details-viewer > div {
+  width: 100%;
+  @media (min-width: 670px) {
+    height: 100vh;
+    max-height: 100vh;
+    max-width: unset;
+  }
+  &>.modal-view__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 2em;
+    @media (min-width: 670px) {
+      max-width: calc(1200px / 2 - 2em);
+      margin: 0 auto;
+      padding-top: var(--header-height);
+      position: relative;
+      translate: 50%;
+    }
+  }
+}

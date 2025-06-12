@@ -1,5 +1,6 @@
 import { LayoutContent } from "Components/LayoutContent";
 import { MovieDetails } from "Components/MovieDetails";
+import { SeriesDetails } from "Components/SeriesDetails";
 import { WebGLImages } from "Components/WebGLImages";
 import {
   PopularMovies,
@@ -23,6 +24,7 @@ export default function Home(_: Propless) {
           <TopRatedTVShows />
         </LayoutContent>
       </main>
+      <SeriesDetails />
       <MovieDetails />
     </WebGLImages>
   );

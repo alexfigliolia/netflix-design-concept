@@ -2,44 +2,48 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useLoadingState } from "@figliolia/react-hooks";
-import { MovieDetails200Response } from "API/models";
+import { TvSeriesDetails200Response } from "API/models";
 import { ContentRating } from "Components/ContentRating";
 import { DetailsViewer } from "Components/DetailsViewer";
-import { Content } from "Tools/Content";
 import { ContentClient } from "Tools/ContentClient";
 import { Routing } from "Tools/Routing";
 import { Propless } from "Types/React";
 import "./styles.scss";
 
-export const MovieDetails = (_: Propless) => {
+export const SeriesDetails = (_: Propless) => {
   const searchParams = useSearchParams();
-  const selectedMovie = useMemo(
-    () => searchParams.get(Routing.MOVIE_DETAILS_PARAM),
+  const selectedSeries = useMemo(
+    () => searchParams.get(Routing.TV_SHOW_DETAILS_PARAM),
     [searchParams],
   );
 
   const { loading, error, setState } = useLoadingState();
-  const [info, setInfo] = useState<MovieDetails200Response>();
+  const [info, setInfo] = useState<TvSeriesDetails200Response>();
 
   useEffect(() => {
-    if (!selectedMovie) {
+    if (!selectedSeries) {
       return;
     }
-    void ContentClient.movieDetails({ movieId: Number(selectedMovie) })
+    void ContentClient.tvSeriesDetails({ seriesId: Number(selectedSeries) })
       .then(setInfo)
       .catch(() => {
         setInfo(undefined);
         setState("error", true);
       })
       .finally(() => setState("loading", false));
-  }, [selectedMovie, setState]);
+  }, [selectedSeries, setState]);
 
   return (
-    <DetailsViewer className="movie-details" open={!!selectedMovie}>
+    <DetailsViewer className="series-details" open={!!selectedSeries}>
       <p>{info?.overview}</p>
       <div className="meta-data">
-        <span>Released {info?.releaseDate?.slice?.(0, 4)}</span>
-        <span>{Content.parseRuntime(info?.runtime ?? 0)}</span>
+        <span>
+          First Aired:{" "}
+          <strong>{info?.firstAirDate?.slice?.(0, 4) ?? ""}</strong>
+        </span>
+        <span>
+          Last Aired: <strong>{info?.lastAirDate?.slice?.(0, 4) ?? ""}</strong>
+        </span>
         <ContentRating voteAverage={info?.voteAverage ?? 0} />
       </div>
       <div className="genres">
@@ -48,7 +52,7 @@ export const MovieDetails = (_: Propless) => {
         })}
       </div>
       <div className="about">
-        <h2>About {info?.title}</h2>
+        <h2>About {info?.name}</h2>
         <div>
           <strong>Produced By:</strong>&nbsp;&nbsp;
           {info?.productionCompanies?.map?.(c => c.name).join?.(", ") ??
